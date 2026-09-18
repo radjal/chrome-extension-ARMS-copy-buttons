@@ -41,35 +41,55 @@ function initExtension() {
     createCopyButton(span, () => span.innerText);
   });
 
-  // 2. Reservation Number (Found span#reservationNumber)
+  // 2. Reservation Number
   const resSpan = document.getElementById('reservationNumber');
   if (resSpan) createCopyButton(resSpan, () => resSpan.innerText);
 
-  // 3. Mobile Number (Found span#renterPhone1Number)
+  // 3. Mobile Number
   const mobileSpan = document.getElementById('renterPhone1Number');
   if (mobileSpan) createCopyButton(mobileSpan, () => mobileSpan.innerText);
 
-  // 4. ENTERPRISE RENT-A-CAR Location (Found span#eracLocation)
+  // 4. ENTERPRISE RENT-A-CAR Location
   const locSpan = document.getElementById('eracLocation');
   if (locSpan) createCopyButton(locSpan, () => locSpan.innerText);
 
-  // 5. Rental Agreement Number (Found input#sf_ticketNum)
-  const raInput = document.getElementById('ticketNumber');
-  if (raInput) createCopyButton(raInput, () => raInput.value);
+  // 5. Rental Agreement Number - FIX: Changed .value to .innerText for SPAN
+  const raSpan = document.getElementById('ticketNumber');
+  if (raSpan) createCopyButton(raSpan, () => raSpan.innerText);
 
-  // 6. Customer VIN # (Special Case: usually a text node in a specific TD or near a label)
-  // Based on scan, the VIN label is often in a <b> tag. 
-  // We look for the label and then the next text node or input.
+  // 6. Customer VIN # - FIX: Search for the value in the adjacent cell or by pattern
   const vinLabel = Array.from(document.querySelectorAll('b')).find(b => b.innerText.includes('Customer VIN #'));
-  if (vinLabel && vinLabel.parentElement) {
-      // If there's an input nearby for VIN, target it. Otherwise target the label.
-      const vinInput = vinLabel.parentElement.querySelector('input');
-      if (vinInput) {
-          createCopyButton(vinInput, () => vinInput.value);
-      } else {
-          // If no input, it might be text content in the parent
-          createCopyButton(vinLabel, () => vinLabel.parentElement.innerText.replace('Customer VIN #:', ''));
-      }
+  if (vinLabel) {
+      createCopyButton(vinLabel, () => {
+          const parentTd = vinLabel.closest('td');
+          if (!parentTd) return "";
+
+          // 1. Look for input in the next cell (The specific structure we found)
+          const nextTd = parentTd.nextElementSibling;
+          const nextTdInput = nextTd ? nextTd.querySelector('input') : null;
+          if (nextTdInput && nextTdInput.value) return nextTdInput.value;
+
+          // 2. Check for input in the same cell (fallback)
+          const sameTdInput = parentTd.querySelector('input');
+          if (sameTdInput && sameTdInput.value) return sameTdInput.value;
+
+          // 3. Fallback: Check text content of next cell
+          if (nextTd && nextTd.innerText.trim()) return nextTd.innerText.trim();
+
+          // 4. Final Fallback: Search the entire row for a VIN pattern
+          const row = parentTd.closest('tr');
+          const vinPattern = /[A-HJ-NPR-Z0-9]{17}/;
+          if (row) {
+              const allInputs = Array.from(row.querySelectorAll('input'));
+              const inputMatch = allInputs.find(i => vinPattern.test(i.value));
+              if (inputMatch) return inputMatch.value;
+
+              const tdMatch = Array.from(row.querySelectorAll('td')).find(td => vinPattern.test(td.innerText));
+              if (tdMatch) return tdMatch.innerText.trim();
+          }
+          
+          return "";
+      });
   }
 }
 

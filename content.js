@@ -50,7 +50,7 @@ function initExtension() {
   if (mobileSpan) createCopyButton(mobileSpan, () => mobileSpan.innerText);
 
   // 4. ENTERPRISE RENT-A-CAR Location
-  const locSpan = document.getElementById('eracLocation');
+  const locSpan = document.getElementById('rentalLocationAddtl');
   if (locSpan) createCopyButton(locSpan, () => locSpan.innerText);
 
   // 5. Rental Agreement Number - FIX: Changed .value to .innerText for SPAN
@@ -82,15 +82,28 @@ function initExtension() {
           if (row) {
               const allInputs = Array.from(row.querySelectorAll('input'));
               const inputMatch = allInputs.find(i => vinPattern.test(i.value));
-              if (inputMatch) return inputMatch.value;
+              if (inputMatch) {
+                return inputMatch.value ;
+               } else {
+                alert('Not a VIN') ;
+                return ;
+               }
 
               const tdMatch = Array.from(row.querySelectorAll('td')).find(td => vinPattern.test(td.innerText));
               if (tdMatch) return tdMatch.innerText.trim();
           }
           
-          return "";
+          return ;
       });
   }
+ 
+  
+  // 7. Branch Number
+  document.querySelectorAll('span[id^="rentalLocationPhone"]').forEach(span => {
+    createCopyButton(span, () => span.innerText);
+  });
+
+
 }
 
 // Run on load and observe changes

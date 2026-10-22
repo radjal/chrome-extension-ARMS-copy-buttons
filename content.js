@@ -27,6 +27,8 @@ function createCopyButton(targetElement, getValueFn) {
     });
   });
 
+  console.log(targetElement.id); 
+
   // Insert after the target element
   if (targetElement.nextSibling) {
     targetElement.parentNode.insertBefore(button, targetElement.nextSibling);
@@ -63,6 +65,10 @@ function initExtension() {
       createCopyButton(vinLabel, () => {
           const parentTd = vinLabel.closest('td');
           if (!parentTd) return "";
+
+
+          console.log('VIN'); 
+
 
           // 1. Look for input in the next cell (The specific structure we found)
           const nextTd = parentTd.nextElementSibling;
@@ -103,6 +109,9 @@ function initExtension() {
     createCopyButton(span, () => span.innerText);
   });
 
+  // 8. Registration Number
+  const regValue = document.getElementById('vehicleRegistrationNumber');
+  if (regValue) createCopyButton(regValue, () => regValue.value);
 
 }
 

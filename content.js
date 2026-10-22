@@ -1,4 +1,4 @@
-function createCopyButton(targetElement, getValueFn) {
+function createCopyButton(targetElement, getValueFn, id=null) {
   // Prevent duplicate buttons
   if (targetElement.nextSibling && targetElement.nextSibling.classList?.contains('copy-btn')) return;
 
@@ -8,6 +8,8 @@ function createCopyButton(targetElement, getValueFn) {
   button.className = 'copy-btn';
   button.style.marginLeft = '5px';
   button.title = 'Copy value';
+
+  button.id = `copybtn-${id}`;
 
   button.addEventListener('click', (e) => {
     e.preventDefault();
@@ -27,7 +29,7 @@ function createCopyButton(targetElement, getValueFn) {
     });
   });
 
-  console.log(targetElement.id); 
+  console.log(targetElement.id, id); 
 
   // Insert after the target element
   if (targetElement.nextSibling) {
@@ -38,28 +40,37 @@ function createCopyButton(targetElement, getValueFn) {
 }
 
 function initExtension() {
+  let id = '';
+
   // 1. Original PO Numbers
-  document.querySelectorAll('span[id^="poNumber"]').forEach(span => {
-    createCopyButton(span, () => span.innerText);
+  id = 'poNumber';
+  document.querySelectorAll(`span[id^="${id}"]`).forEach(span => { // for Saleforces reference number in rental extension list view
+    createCopyButton(span, () => span.innerText, id);
+    console.log('PO number');
   });
 
   // 2. Reservation Number
-  const resSpan = document.getElementById('reservationNumber');
-  if (resSpan) createCopyButton(resSpan, () => resSpan.innerText);
+  id = 'reservationNumber';
+  const resSpan = document.getElementById(id);
+  if (resSpan) createCopyButton(resSpan, () => resSpan.innerText, id);
 
   // 3. Mobile Number
-  const mobileSpan = document.getElementById('renterPhone1Number');
-  if (mobileSpan) createCopyButton(mobileSpan, () => mobileSpan.innerText);
+  id = 'renterPhone1Number';
+  const mobileSpan = document.getElementById(id);
+  if (mobileSpan) createCopyButton(mobileSpan, () => mobileSpan.innerText, id);
 
   // 4. ENTERPRISE RENT-A-CAR Location
-  const locSpan = document.getElementById('rentalLocationAddtl');
-  if (locSpan) createCopyButton(locSpan, () => locSpan.innerText);
+  id = 'rentalLocationAddtl';
+  const locSpan = document.getElementById(id);
+  if (locSpan) createCopyButton(locSpan, () => locSpan.innerText, id);
 
   // 5. Rental Agreement Number - FIX: Changed .value to .innerText for SPAN
-  const raSpan = document.getElementById('ticketNumber');
-  if (raSpan) createCopyButton(raSpan, () => raSpan.innerText);
+  id = 'ticketNumber';
+  const raSpan = document.getElementById(id);
+  if (raSpan) createCopyButton(raSpan, () => raSpan.innerText, id);
 
   // 6. Customer VIN # - FIX: Search for the value in the adjacent cell or by pattern
+  id = 'vin';
   const vinLabel = Array.from(document.querySelectorAll('b')).find(b => b.innerText.includes('Customer VIN #'));
   if (vinLabel) {
       createCopyButton(vinLabel, () => {
@@ -100,18 +111,20 @@ function initExtension() {
           }
           
           return ;
-      });
+      }, id);
   }
  
   
   // 7. Branch Number
-  document.querySelectorAll('span[id^="rentalLocationPhone"]').forEach(span => {
-    createCopyButton(span, () => span.innerText);
+  id = 'rentalLocationPhone';
+  document.querySelectorAll(`span[id^="${id}"]`).forEach(span => {
+    createCopyButton(span, () => span.innerText, id);
   });
 
   // 8. Registration Number
-  const regValue = document.getElementById('vehicleRegistrationNumber');
-  if (regValue) createCopyButton(regValue, () => regValue.value);
+  id = 'vehicleRegistrationNumber';
+  const regValue = document.getElementById(id);
+  if (regValue) createCopyButton(regValue, () => regValue.value, id);
 
 }
 

@@ -9,6 +9,13 @@ function createCopyButton(targetElement, getValueFn, id=null) {
   button.style.marginLeft = '5px';
   button.title = 'Copy value';
 
+    // Check if the ID is specifically null or physically null/empty
+  if (id === null || !id) {
+    // Generate a random string (e.g., a7b2c)
+    id = '' + Math.random().toString(36).substr(2, 9);
+    
+    console.log(`Assigned random value to id: ${id}`);
+  }
   button.id = `copybtn-${id}`;
 
   button.addEventListener('click', (e) => {
@@ -43,9 +50,9 @@ function initExtension() {
   let id = '';
 
   // 1. Original PO Numbers
-  id = 'poNumber';
-  document.querySelectorAll(`span[id^="${id}"]`).forEach(span => { // for Saleforces reference number in rental extension list view
-    createCopyButton(span, () => span.innerText, id);
+  id = null;
+  document.querySelectorAll(`span[id^="poNumber"]`).forEach(span => { // for Saleforces reference number in rental extension list view, do not set button ID
+    createCopyButton(span, () => span.innerText, id); //should be null
     console.log('PO number');
   });
 

@@ -123,10 +123,10 @@ function initExtension() {
  
   
   // 7. Branch Number
-  id = 'rentalLocationPhone';
-  document.querySelectorAll(`span[id^="${id}"]`).forEach(span => {
-    createCopyButton(span, () => span.innerText, id);
-  });
+  id = 'rentalLocationPhone'; 
+  const rlSpan = document.getElementById(id);
+  if (rlSpan) createCopyButton(rlSpan, () => rlSpan.innerText, id);
+
 
   // 8. Registration Number
   id = 'vehicleRegistrationNumber';

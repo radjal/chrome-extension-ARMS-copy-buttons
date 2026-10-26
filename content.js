@@ -56,30 +56,25 @@ function copyBtnWrapper(id, attr = "text") {
 
 
 function initExtension() {
-  let id = '';
+  let id = null;
 
-  // 1. Original PO Numbers
-  id = null;
+  // 1. Original PO Numbers 
   document.querySelectorAll(`span[id^="poNumber"]`).forEach(span => { // for Saleforces reference number in rental extension list view, do not set button ID
-    createCopyButton(span, () => span.innerText, id); //should be null
+    createCopyButton(span, () => span.innerText, null); //id should be null
     console.log('PO number');
   });
 
   // 2. Reservation Number
-  id = 'reservationNumber'; 
-  copyBtnWrapper(id);
+  copyBtnWrapper('reservationNumber');
 
   // 3. Mobile Number
-  id = 'renterPhone1Number'; 
-  copyBtnWrapper(id);
+  copyBtnWrapper('renterPhone1Number');
 
   // 4. ENTERPRISE RENT-A-CAR Location
-  id = 'rentalLocationAddtl'; 
-  copyBtnWrapper(id);
+  copyBtnWrapper('rentalLocationAddtl');
 
   // 5. Rental Agreement Number - FIX: Changed .value to .innerText for SPAN
-  id = 'ticketNumber'; 
-  copyBtnWrapper(id);
+  copyBtnWrapper('ticketNumber');
 
   // 6. Special case - Customer VIN # - FIX: Search for the value in the adjacent cell or by pattern
   id = 'vin';
@@ -87,11 +82,9 @@ function initExtension() {
   if (vinLabel) {
       createCopyButton(vinLabel, () => {
           const parentTd = vinLabel.closest('td');
-          if (!parentTd) return "";
+          if (!parentTd) return ""; 
 
-
-          console.log('VIN'); 
-
+          console.log('VIN');  
 
           // 1. Look for input in the next cell (The specific structure we found)
           const nextTd = parentTd.nextElementSibling;
@@ -128,13 +121,10 @@ function initExtension() {
  
   
   // 7. Branch Number
-  id = 'rentalLocationPhone';  
-  copyBtnWrapper(id);
+  copyBtnWrapper('rentalLocationPhone');
 
   // 8. Registration Number
-  id = 'vehicleRegistrationNumber'; 
-  copyBtnWrapper(id, 'value'); 
-
+  copyBtnWrapper('vehicleRegistrationNumber', 'value'); 
 }
 
 // Run on load and observe changes

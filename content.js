@@ -34,9 +34,7 @@ function createCopyButton(targetElement, getValueFn, id=null) {
         button.classList.remove('copied');
       }, 2000);
     });
-  });
-
-  console.log(targetElement.id, id); 
+  }); 
 
   // Insert after the target element
   if (targetElement.nextSibling) {
@@ -45,6 +43,17 @@ function createCopyButton(targetElement, getValueFn, id=null) {
     targetElement.parentNode.appendChild(button);
   }
 }
+
+function copyBtnWrapper(id, attr = "text") {   
+  let el = document.getElementById(id);  
+
+  if ( String(attr).toLowerCase() == 'value') {
+    if (el) createCopyButton(el, () => el.value, id); 
+  } else {
+    if (el) createCopyButton(el, () => el.innerText, id);
+  }    
+}
+
 
 function initExtension() {
   let id = '';
@@ -57,26 +66,22 @@ function initExtension() {
   });
 
   // 2. Reservation Number
-  id = 'reservationNumber';
-  const resSpan = document.getElementById(id);
-  if (resSpan) createCopyButton(resSpan, () => resSpan.innerText, id);
+  id = 'reservationNumber'; 
+  copyBtnWrapper(id);
 
   // 3. Mobile Number
-  id = 'renterPhone1Number';
-  const mobileSpan = document.getElementById(id);
-  if (mobileSpan) createCopyButton(mobileSpan, () => mobileSpan.innerText, id);
+  id = 'renterPhone1Number'; 
+  copyBtnWrapper(id);
 
   // 4. ENTERPRISE RENT-A-CAR Location
-  id = 'rentalLocationAddtl';
-  const locSpan = document.getElementById(id);
-  if (locSpan) createCopyButton(locSpan, () => locSpan.innerText, id);
+  id = 'rentalLocationAddtl'; 
+  copyBtnWrapper(id);
 
   // 5. Rental Agreement Number - FIX: Changed .value to .innerText for SPAN
-  id = 'ticketNumber';
-  const raSpan = document.getElementById(id);
-  if (raSpan) createCopyButton(raSpan, () => raSpan.innerText, id);
+  id = 'ticketNumber'; 
+  copyBtnWrapper(id);
 
-  // 6. Customer VIN # - FIX: Search for the value in the adjacent cell or by pattern
+  // 6. Special case - Customer VIN # - FIX: Search for the value in the adjacent cell or by pattern
   id = 'vin';
   const vinLabel = Array.from(document.querySelectorAll('b')).find(b => b.innerText.includes('Customer VIN #'));
   if (vinLabel) {
@@ -123,15 +128,12 @@ function initExtension() {
  
   
   // 7. Branch Number
-  id = 'rentalLocationPhone'; 
-  const rlSpan = document.getElementById(id);
-  if (rlSpan) createCopyButton(rlSpan, () => rlSpan.innerText, id);
-
+  id = 'rentalLocationPhone';  
+  copyBtnWrapper(id);
 
   // 8. Registration Number
-  id = 'vehicleRegistrationNumber';
-  const regValue = document.getElementById(id);
-  if (regValue) createCopyButton(regValue, () => regValue.value, id);
+  id = 'vehicleRegistrationNumber'; 
+  copyBtnWrapper(id, 'value'); 
 
 }
 

@@ -80,11 +80,12 @@ function initExtension() {
   id = 'vin';
   const vinLabel = Array.from(document.querySelectorAll('b')).find(b => b.innerText.includes('Customer VIN #'));
   if (vinLabel) {
+      console.log('VIN label');  
       createCopyButton(vinLabel, () => {
           const parentTd = vinLabel.closest('td');
           if (!parentTd) return ""; 
 
-          console.log('VIN');  
+          console.log('VIN btn triggered');  
 
           // 1. Look for input in the next cell (The specific structure we found)
           const nextTd = parentTd.nextElementSibling;
@@ -125,6 +126,18 @@ function initExtension() {
 
   // 8. Registration Number
   copyBtnWrapper('vehicleRegistrationNumber', 'value'); 
+  
+  // 9. Home Number
+  copyBtnWrapper('renterPhone2Number');
+  
+  // 10. Email
+  copyBtnWrapper('renterEmail', 'value');
+  
+  // 11. Rental Start
+  copyBtnWrapper('rentalStartDate');
+  
+  // 10. Rental End
+  copyBtnWrapper('lastAuthorizedDate');
 }
 
 // Run on load and observe changes

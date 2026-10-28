@@ -140,6 +140,61 @@ function initExtension() {
   copyBtnWrapper('lastAuthorizedDate');
 }
 
+// --------------- inject menu button to search Rental Agreement Number automatically
+
+function injectFindCustomerButton() {
+  const findCustomerLink = document.getElementById('findCustomer');
+  
+  // Check if link exists and button isn't already injected
+  if (findCustomerLink && !document.getElementById('extraActionButton')) {
+    const parentLi = findCustomerLink.parentElement;
+
+    const newButton = document.createElement('button');
+    newButton.textContent = 'AutoSearch Rental'; // Change this to your desired label
+    newButton.id = 'extraActionButton';
+    newButton.type = 'button';
+    
+    // Optional: Add styling to match your extension's needs
+    newButton.style.marginLeft = '10px';
+    newButton.className = 'arms-injected-find-customer-button'; // Use a class for CSS targeting
+
+    // Insert after the link
+    parentLi.appendChild(newButton);
+    
+    // -------------------------
+    // Add your extension's functionality here
+    newButton.addEventListener('click', async () => {
+      // 1. Open the Find Customer section
+      document.querySelector('a#findCustomer').click();
+
+      try {
+        // 2. Get text from clipboard
+        const text = await navigator.clipboard.readText();
+        
+        // 3. Paste into the ticket number field
+        const input = document.querySelector('input#sf_ticketNum');
+        if (input) {
+          //input.value = text;
+          input.value = (text || "").trim();
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          
+          // 4. Execute the search
+          const searchBtn = document.getElementById('sf_search');
+          if (searchBtn) {
+            searchBtn.click();
+          }
+        }
+      } catch (err) {
+        console.error('Extension error (injectFindCustomerButton):', err);
+      }
+    });
+  }
+}
+
+// Run on load
+injectFindCustomerButton();
+// --------------- menu button
+
 // Run on load and observe changes
 initExtension();
 const observer = new MutationObserver(() => initExtension());
